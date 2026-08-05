@@ -23,8 +23,8 @@
             --success-color: #26aa99;         /* 蝦皮綠色 */
             --danger-color: #ee4d2d;          /* 蝦皮紅色 (FAIL) */
             --warning-color: #ffbf00;         /* 蝦皮警示黃 */
-            --code-bg: #262626;
-            --code-text: #f8fafc;
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
             --shadow-sm: 0 1px 1px rgba(0,0,0,0.05);
             --shadow-md: 0 2px 4px rgba(0,0,0,0.08);
         }
@@ -174,13 +174,14 @@
         .code-block {
             background-color: var(--code-bg);
             color: var(--code-text);
-            padding: 1.25rem;
-            border-radius: 4px;
+            padding: 1.25rem 1.5rem;
+            border-radius: 6px;
             font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
             font-size: 0.875rem;
-            line-height: 1.5;
+            line-height: 1.7;
             overflow-x: auto;
             margin: 1rem 0;
+            border-left: 4px solid var(--shopee-orange);
         }
 
         /* 蝦皮風格提示區塊 */
@@ -194,15 +195,27 @@
             color: #333333;
         }
 
-        /* 流程圖容器 */
+        /* 流程圖容器 (放大呈現優化) */
         .diagram-container {
             display: flex;
             justify-content: center;
+            align-items: center;
             background: #ffffff;
-            padding: 1.5rem;
-            border-radius: 4px;
+            padding: 2.5rem 1.5rem;
+            border-radius: 6px;
             border: 1px dashed var(--border-color);
-            margin: 1rem 0;
+            margin: 1.25rem 0;
+            overflow-x: auto;
+        }
+        .diagram-container .mermaid {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .diagram-container svg {
+            max-width: 100% !important;
+            height: auto !important;
+            min-height: 280px;
         }
 
         /* 頁尾 (Footer) */
@@ -214,14 +227,6 @@
             font-size: 0.9rem;
             color: var(--text-muted);
         }
-        footer a {
-            color: var(--shopee-orange);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -231,7 +236,7 @@
         <h1><i class="fa-solid fa-bag-shopping"></i> Dashboard Automation</h1>
         <p>自動化資料數據檢查系統文件</p>
         <div class="quick-nav">
-            <a href="#section-1" class="btn-nav">1. 系統總覽與效益</a>
+            <a href="#section-1" class="btn-nav">1. 系統總覽</a>
             <a href="#section-2" class="btn-nav">2. 新增檢查報表與運作流程</a>
             <a href="#section-3" class="btn-nav">3. 數據檢驗報告呈現</a>
         </div>
@@ -247,7 +252,7 @@
             
             <ul class="feature-list">
                 <li><strong>自動化排程派送</strong>：透過 GitHub Actions 於每日指定時間自動喚醒執行，完成數據品質檢驗與 HTML 報告派送。</li>
-                <li><strong>高彈性設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成監控設定，無須修改程式碼。</li>
+                <li><strong>高彈性設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成監控設定。</li>
                 <li><strong>基準日期自動檢驗</strong>：以系統當前日期為基準，自動執行資料完整性檢核（含欄位存在性、D-1 更新狀態、7日日期連續性、每日筆數波動及指標異常檢測）。</li>
                 <li><strong>視覺化健康度通報</strong>：系統依據檢測結果（PASS/FAIL）自動切換郵件主題視覺，精準標示異常項目與原因。</li>
             </ul>
@@ -259,7 +264,9 @@
             <p>若需新增 Google Sheet 監控項目，無須更動任何程式碼，僅需完成以下設定流程：</p>
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📖 Step 1. 編輯 Monitor 設定檔</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem;">請至監控主表之 <code>Monitor - MONITOR_CONFIG</code> 工作表中新增列位：</p>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                請至監控主表之 <code>Monitor - MONITOR_CONFIG</code> 工作表中新增列位（如需減少監控表單，直接於設定檔中刪除對應列位即可）：
+            </p>
             
             <div class="table-responsive">
                 <table>
@@ -289,7 +296,7 @@
                         <tr>
                             <td><code>metrics</code></td>
                             <td>欲執行數據比對之數值欄位（多個請以逗號隔開）</td>
-                            <td><code>Metric_A, Metric_B, Metric_C</code></td>
+                            <td><code>Data_A, Data_B, Data_C</code></td>
                         </tr>
                     </tbody>
                 </table>
@@ -314,21 +321,28 @@
                     end
 
                     Step1 ==> Step2
+
+                    style Step1 fill:#f9f9f9,stroke:#ee4d2d,stroke-width:2px;
+                    style Step2 fill:#f9f9f9,stroke:#ee4d2d,stroke-width:2px;
                 </pre>
             </div>
 
-            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📝 Step 3. 系統檢測日誌產出格式</h3>
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📝 Step 3. 系統檢測產出格式</h3>
             <div class="code-block">
-📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS /🔴 FAIL
-📅 D-1 日期: YYYY-MM-DD | D-2 日期: YYYY-MM-DD
-📦 資料筆數: D-1 (YYYY-MM-DD) 資料筆數: 0 | D-2 (YYYY-MM-DD) 資料筆數: Number (-100.0%)
+📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS / 🔴 FAIL
+----------------------------------------------------------------------
+📅 D-1 日期: YYYY-MM-DD
+📅 D-2 日期: YYYY-MM-DD
+📦 資料筆數變動:
+   • D-1 (YYYY-MM-DD): 0 筆
+   • D-2 (YYYY-MM-DD): Number 筆 (-100.0%)
 
 📊 各維度數據比對明細：
-📌 Metric_Name:
-   • [D-1 vs D-2]    D-1單日: 0 | D-2單日: Number (-100.0%)
-   • [D-1 vs 7日均]  D-1單日: 0 | 7日均值: Number (-100.0%)
-   • [MTD 比對(MoM)] 本月累計: Number | 上月同期: Number (+/-% )
-   • [YTD 比對(YoY)] 今年累計: Number | 去年同期: Number (+/-% )
+📌 Data_Name:
+   • [D-1 vs D-2]    D-1單日: Number | D-2單日: Number (+/-%)
+   • [D-1 vs 7日均]  D-1單日: Number | 7日均值: Number (+/-%)
+   • [MTD 比對(MoM)] 本月累計: Number | 上月同期: Number (+/-%)
+   • [YTD 比對(YoY)] 今年累計: Number | 去年同期: Number (+/-%)
             </div>
         </section>
 
@@ -360,18 +374,18 @@
                         </tr>
                         <tr>
                             <td><strong>整體健康狀態</strong></td>
-                            <td><strong>D-1 資料完成更新，數據檢驗正常/ 數據缺失或筆數異常，觸發警報</strong></td>
-                            <td class="text-center"><span class="badge badge-fail">🟢 PASS /🔴 FAIL</span></td>
+                            <td>D-1 資料完成更新，數據檢驗正常 / 數據缺失或筆數異常，觸發警報</td>
+                            <td class="text-center"><span class="badge badge-fail">🟢 PASS / 🔴 FAIL</span></td>
                         </tr>
                         <tr>
                             <td><strong>最新更新日期</strong></td>
                             <td><strong>D-1</strong> (<code>YYYY-MM-DD</code>) | <strong>D-2</strong> (<code>YYYY-MM-DD</code>)</td>
-                            <td class="text-center"><span class="badge badge-fail"></span></td>
+                            <td class="text-center">-</td>
                         </tr>
                         <tr>
                             <td><strong>資料筆數變動</strong></td>
                             <td><strong>D-1</strong>: <code>0</code> 筆 | <strong>D-2</strong>: <code>Number</code> 筆 (<strong>-100.0%</strong>)</td>
-                            <td class="text-center"><span class="badge badge-fail"></span></td>
+                            <td class="text-center">-</td>
                         </tr>
                     </tbody>
                 </table>
@@ -386,7 +400,7 @@
                             <th>檢驗目的</th>
                             <th>D-1 / 當期數值</th>
                             <th>對照期數值</th>
-                            <th>變動幅度 (%)</th>                    
+                            <th>變動幅度 (%)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -396,7 +410,6 @@
                             <td><strong>0</strong></td>
                             <td>Number (D-2)</td>
                             <td><strong>-100.0%</strong></td>
-                            <td class="text-center"><span class="badge badge-fail"></span></td>
                         </tr>
                         <tr>
                             <td><strong>[D-1 vs 7日均]</strong></td>
@@ -404,7 +417,6 @@
                             <td><strong>0</strong></td>
                             <td>Number (7日均值)</td>
                             <td><strong>-100.0%</strong></td>
-                            <td class="text-center"><span class="badge badge-fail"></span></td>
                         </tr>
                         <tr>
                             <td><strong>[MTD 比對 (MoM)]</strong></td>
@@ -412,7 +424,6 @@
                             <td><strong>Number</strong> (本月)</td>
                             <td>Number (上月同期)</td>
                             <td><strong>+/-%</strong></td>
-                            <td class="text-center"><span class="badge badge-pass"></span></td>
                         </tr>
                         <tr>
                             <td><strong>[YTD 比對 (YoY)]</strong></td>
@@ -420,7 +431,6 @@
                             <td><strong>Number</strong> (今年)</td>
                             <td>Number (去年同期)</td>
                             <td><strong>+/-%</strong></td>
-                            <td class="text-center"><span class="badge badge-warn"></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -429,8 +439,8 @@
             <div class="alert">
                 <strong>💡 多維度比對機制說明：</strong>
                 <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
-                    <li><strong>D-1 vs D-2</strong>：第一時間識別資料數值維持正常更新。</li>
-                    <li><strong>D-1 vs 7日均值</strong>：識別資料數值是否異常爆量/減少,過濾週期性（如週末）波動，降低誤報機率。</li>
+                    <li><strong>D-1 vs D-2</strong>：第一時間識別資料數值是否維持正常更新。</li>
+                    <li><strong>D-1 vs 7日均值</strong>：識別資料數值是否異常爆量/減少，並過濾週期性（如週末）波動，降低誤報機率。</li>
                     <li><strong>MTD / YTD 比對</strong>：從長期角度檢視月度與年度累計數據之連續性。</li>
                 </ul>
             </div>
@@ -440,7 +450,7 @@
 
     <!-- 指定頁尾 -->
     <footer>
-        <p>© 2026 Market Trends Monitor. Hosted on GitHub Pages</a>.</p>
+        <p>© 2026 Market Trends Monitor. Hosted on GitHub Pages.</p>
     </footer>
 
 </body>
