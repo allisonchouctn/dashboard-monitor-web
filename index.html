@@ -247,14 +247,14 @@
         
         <!-- 第一章節 -->
         <section id="section-1" class="card">
-            <h2 class="card-title"><i class="fa-solid fa-compass"></i> 1. 系統總覽與效益</h2>
+            <h2 class="card-title"><i class="fa-solid fa-compass"></i> 1. 系統總覽</h2>
             <p style="margin-bottom: 1rem;">本系統旨在建立自動化數據品質防護機制，有效解決過往資料更新中斷、欄位遺失或數據異常未即時發現之問題。</p>
             
             <ul class="feature-list">
-                <li><strong>自動化排程派送</strong>：透過 GitHub Actions 於每日指定時間自動喚醒執行，完成數據品質檢驗與 HTML 報告派送。</li>
-                <li><strong>高彈性設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成監控設定。</li>
+                <li><strong>自動化排程</strong>：透過 GitHub Actions 於每日指定時間自動喚醒執行，完成數據品質檢驗與 HTML 報告派送。</li>
+                <li><strong>設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成監控設定。</li>
                 <li><strong>基準日期自動檢驗</strong>：以系統當前日期為基準，自動執行資料完整性檢核（含欄位存在性、D-1 更新狀態、7日日期連續性、每日筆數波動及指標異常檢測）。</li>
-                <li><strong>視覺化健康度通報</strong>：系統依據檢測結果（PASS/FAIL）自動切換郵件主題視覺，精準標示異常項目與原因。</li>
+                <li><strong>視覺化數據檢測通報</strong>：系統依據檢測結果（PASS/FAIL）自動發送至郵件，標示異常項目與原因。</li>
             </ul>
         </section>
 
@@ -330,7 +330,7 @@
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📝 Step 3. 系統檢測產出格式</h3>
             <div class="code-block">
 📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS / 🔴 FAIL
-----------------------------------------------------------------------
+--------------------------------
 📅 D-1 日期: YYYY-MM-DD
 📅 D-2 日期: YYYY-MM-DD
 📦 資料筆數變動:
