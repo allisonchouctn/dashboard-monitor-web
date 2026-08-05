@@ -253,7 +253,7 @@
             
             <ul class="feature-list">
                 <li><strong>自動化排程</strong>：透過 GitHub Actions 於每日指定時間自動喚醒執行，完成數據品質檢驗與 HTML 報告派送。</li>
-                <li><strong>設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成檢測設定。</li>
+                <li><strong>設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成檢驗設定。</li>
                 <li><strong>基準日期自動檢驗</strong>：以系統當前日期為基準，自動執行資料完整性檢核（含欄位存在性、D-1 更新狀態、7日日期連續性、每日筆數波動及指標異常檢測）。</li>
                 <li><strong>視覺化數據檢測通報</strong>：系統依據檢測結果（PASS/FAIL）自動發送至郵件，標示異常項目與原因。</li>
             </ul>
@@ -262,11 +262,11 @@
         <!-- 第二章節 -->
         <section id="section-2" class="card">
             <h2 class="card-title"><i class="fa-solid fa-square-plus"></i> 2. 新增檢查報表與運作流程</h2>
-            <p>若需新增 Google Sheet 監控項目，無須更動任何程式碼，僅需完成以下設定流程：</p>
+            <p>若需新增 Google Sheet 檢驗項目，無須更動任何程式碼，僅需完成以下設定流程：</p>
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📖 Step 1. 編輯 Monitor 設定檔</h3>
             <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-                請至監控主表之 <code>Monitor - MONITOR_CONFIG</code> 工作表中新增列位（如需減少監控表單，直接於設定檔中刪除對應列位即可）：
+                請至檢驗主表之 <code>Monitor - MONITOR_CONFIG</code> 工作表中新增列位（如需減少監控表單，直接於設定檔中刪除對應列位即可）：
             </p>
             
             <div class="table-responsive">
@@ -286,7 +286,7 @@
                         </tr>
                         <tr>
                             <td><code>worksheet_name</code></td>
-                            <td>欲監控之特定工作表（分頁）名稱</td>
+                            <td>欲檢驗之特定工作表（分頁）名稱</td>
                             <td><code>Worksheet_Name</code></td>
                         </tr>
                         <tr>
@@ -303,9 +303,9 @@
                 </table>
             </div>
 
-            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🔑 Step 2. 將新增 Google Sheet 監控項目共享給 Service Account</h3>
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🔑 Step 2. 將新增 Google Sheet 檢查項目共享給 Service Account</h3>
             <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-                請開啟欲監控的 Google Sheet 檔案，點擊右上角「共用」按鈕，將系統之 Service Account 電子郵件地址新增為共用成員，並授予「檢視者」權限，確保自動化程式可正常讀取該報表數據。
+                請開啟欲檢查的 Google Sheet 檔案，點擊右上角「共用」按鈕，將系統之 Service Account 電子郵件地址新增為共用成員，並授予「檢視者」權限，確保自動化程式可正常讀取該報表數據。
             </p>
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🛡️ Step 3. 自動化巡檢架構圖</h3>
