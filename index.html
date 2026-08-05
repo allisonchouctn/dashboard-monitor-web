@@ -334,7 +334,8 @@
             </div>
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📝 Step 4. 系統檢測產出格式</h3>
-            <div class="code-block">📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS / 🔴 FAIL
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">正常情境 (🟢 PASS)：</p>
+            <div class="code-block">📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS
 --------------------------------
 📅 D-1 日期: YYYY-MM-DD
 📅 D-2 日期: YYYY-MM-DD
@@ -347,6 +348,15 @@
    • [D-1 vs 7日均]  D-1單日: Number | 7日均值: Number (+/-%)
    • [MTD 比對(MoM)] 本月累計: Number | 上月同期: Number (+/-%)
    • [YTD 比對(YoY)] 今年累計: Number | 去年同期: Number (+/-%)</div>
+
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem; margin-bottom: 0.5rem;">異常情境 (🔴 FAIL)：</p>
+            <div class="code-block">📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🔴 FAIL
+--------------------------------
+🚨 異常原因：
+   • [更新異常] 資料未更新！今日為 Current_Date，期待 D-1 日期為 [YYYY-MM-DD]，但資料最新僅到 [YYYY-MM-DD]
+   • [日期缺失] 近 7 天內缺少日期: YYYY-MM-DD
+   • [筆數異常] D-1 (YYYY-MM-DD) 完全無資料 (0 筆)
+   • [KPI異常] Data_A 單日數據較 7 日均值暴跌 % ; Data_B 單日數據較 7 日均值暴跌 % ; Data_C 單日數據較 7 日均值暴跌 %
         </section>
 
         <!-- 第三章節 -->
