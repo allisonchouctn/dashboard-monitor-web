@@ -20,7 +20,8 @@
             --text-main: #222222;
             --text-muted: #757575;
             --border-color: #e8e8e8;
-            --success-color: #26aa99;         /* 蝦皮綠色 (類似折扣碼綠) */
+            --success-color: #26aa99;         /* 蝦皮綠色 */
+            --danger-color: #ee4d2d;          /* 蝦皮紅色 (FAIL) */
             --warning-color: #ffbf00;         /* 蝦皮警示黃 */
             --code-bg: #262626;
             --code-text: #f8fafc;
@@ -166,6 +167,7 @@
             font-weight: 600;
         }
         .badge-pass { background-color: #e8f7f5; color: var(--success-color); border: 1px solid #b2e5df; }
+        .badge-fail { background-color: #fff0ed; color: var(--danger-color); border: 1px solid #fccac1; }
         .badge-warn { background-color: #fff8e6; color: #d97706; border: 1px solid #ffe599; }
 
         /* 日誌代碼區塊 */
@@ -244,7 +246,7 @@
             <p style="margin-bottom: 1rem;">本系統旨在建立自動化數據品質防護機制，有效解決過往資料更新中斷、欄位遺失或數據異常未即時發現之問題。</p>
             
             <ul class="feature-list">
-                <li><strong>自動化排程派送</strong>：透過 GitHub Actions 於每日 08:20 (UTC+8) 自動喚醒執行，確保於 09:30 前完成數據品質檢驗與 HTML 報告派送。</li>
+                <li><strong>自動化排程派送</strong>：透過 GitHub Actions 於每日指定時間自動喚醒執行，完成數據品質檢驗與 HTML 報告派送。</li>
                 <li><strong>高彈性設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成監控設定，無須修改程式碼。</li>
                 <li><strong>基準日期自動檢驗</strong>：以系統當前日期為基準，自動執行資料完整性檢核（含欄位存在性、D-1 更新狀態、7日日期連續性、每日筆數波動及指標異常檢測）。</li>
                 <li><strong>視覺化健康度通報</strong>：系統依據檢測結果（PASS/FAIL）自動切換郵件主題視覺，精準標示異常項目與原因。</li>
@@ -272,22 +274,22 @@
                         <tr>
                             <td><code>spreadsheet_name</code></td>
                             <td>目標 Google Sheet 之檔案名稱</td>
-                            <td><code>XXX Data</code></td>
+                            <td><code>Spreadsheet_Name</code></td>
                         </tr>
                         <tr>
                             <td><code>worksheet_name</code></td>
                             <td>欲監控之特定工作表（分頁）名稱</td>
-                            <td><code>RAW_SUBCAT</code></td>
+                            <td><code>Worksheet_Name</code></td>
                         </tr>
                         <tr>
                             <td><code>date_column</code></td>
                             <td>資料表中作為日期基準之欄位名稱</td>
-                            <td><code>日期</code></td>
+                            <td><code>Date_Column</code></td>
                         </tr>
                         <tr>
                             <td><code>metrics</code></td>
                             <td>欲執行數據比對之數值欄位（多個請以逗號隔開）</td>
-                            <td><code>GMV, Orders, Impression</code></td>
+                            <td><code>Metric_A, Metric_B, Metric_C</code></td>
                         </tr>
                     </tbody>
                 </table>
@@ -317,15 +319,16 @@
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📝 Step 3. 系統檢測日誌產出格式</h3>
             <div class="code-block">
-📄 報表：[EE Traffic Raw Data (2023-2026)-1] - 工作表: [2026] -> 🟢 PASS
-📅 D-1 日期: 2026-08-03 | D-2 日期: 2026-08-02
-📦 資料筆數: D-1 (2026-08-03) 資料筆數: 62 | D-2 (2026-08-02) 資料筆數: 64 (-3.1%)
+📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS /🔴 FAIL
+📅 D-1 日期: YYYY-MM-DD | D-2 日期: YYYY-MM-DD
+📦 資料筆數: D-1 (YYYY-MM-DD) 資料筆數: 0 | D-2 (YYYY-MM-DD) 資料筆數: Number (-100.0%)
 
 📊 各維度數據比對明細：
-   • [D-1 vs D-2]    D-1單日: 484,367 | D-2單日: 486,620 (-0.5%)
-   • [D-1 vs 7日均]  D-1單日: 484,367 | 7日均值: 448,702 (+7.9%)
-   • [MTD 比對(MoM)] 本月累計: 1,416,572 | 上月同期: 1,259,683 (+12.5%)
-   • [YTD 比對(YoY)] 今年累計: 93,415,757 | 去年同期: 0 (+0.0%)
+📌 Metric_Name:
+   • [D-1 vs D-2]    D-1單日: 0 | D-2單日: Number (-100.0%)
+   • [D-1 vs 7日均]  D-1單日: 0 | 7日均值: Number (-100.0%)
+   • [MTD 比對(MoM)] 本月累計: Number | 上月同期: Number (+/-% )
+   • [YTD 比對(YoY)] 今年累計: Number | 去年同期: Number (+/-% )
             </div>
         </section>
 
@@ -347,28 +350,28 @@
                     <tbody>
                         <tr>
                             <td><strong>目標報表名稱</strong></td>
-                            <td><code>EE Traffic Raw Data (2023-2026)-1</code></td>
+                            <td><code>Spreadsheet_Name</code></td>
                             <td class="text-center">-</td>
                         </tr>
                         <tr>
                             <td><strong>監控工作表</strong></td>
-                            <td><code>2026</code></td>
+                            <td><code>Worksheet_Name</code></td>
                             <td class="text-center">-</td>
                         </tr>
                         <tr>
                             <td><strong>整體健康狀態</strong></td>
-                            <td><strong>資料完成更新，數據檢驗正常</strong></td>
-                            <td class="text-center"><span class="badge badge-pass">🟢 PASS</span></td>
+                            <td><strong>D-1 資料完成更新，數據檢驗正常/ 數據缺失或筆數異常，觸發警報</strong></td>
+                            <td class="text-center"><span class="badge badge-fail">🟢 PASS /🔴 FAIL</span></td>
                         </tr>
                         <tr>
                             <td><strong>最新更新日期</strong></td>
-                            <td><strong>D-1</strong> (<code>2026-08-03</code>) | <strong>D-2</strong> (<code>2026-08-02</code>)</td>
-                            <td class="text-center"><span class="badge badge-pass">🟢 正常</span></td>
+                            <td><strong>D-1</strong> (<code>YYYY-MM-DD</code>) | <strong>D-2</strong> (<code>YYYY-MM-DD</code>)</td>
+                            <td class="text-center"><span class="badge badge-fail"></span></td>
                         </tr>
                         <tr>
                             <td><strong>資料筆數變動</strong></td>
-                            <td><strong>D-1</strong>: <code>62</code> 筆 | <strong>D-2</strong>: <code>64</code> 筆 (<strong>-3.1%</strong>)</td>
-                            <td class="text-center"><span class="badge badge-pass">🟢 平穩</span></td>
+                            <td><strong>D-1</strong>: <code>0</code> 筆 | <strong>D-2</strong>: <code>Number</code> 筆 (<strong>-100.0%</strong>)</td>
+                            <td class="text-center"><span class="badge badge-fail"></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -383,42 +386,41 @@
                             <th>檢驗目的</th>
                             <th>D-1 / 當期數值</th>
                             <th>對照期數值</th>
-                            <th>變動幅度 (%)</th>
-                            <th class="text-center">狀態</th>
+                            <th>變動幅度 (%)</th>                    
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><strong>[D-1 vs D-2]</strong></td>
                             <td>檢測單日突發性數據異常</td>
-                            <td><strong>484,367</strong></td>
-                            <td>486,620 (D-2)</td>
-                            <td><strong>-0.5%</strong></td>
-                            <td class="text-center"><span class="badge badge-pass">🟢 正常</span></td>
+                            <td><strong>0</strong></td>
+                            <td>Number (D-2)</td>
+                            <td><strong>-100.0%</strong></td>
+                            <td class="text-center"><span class="badge badge-fail"></span></td>
                         </tr>
                         <tr>
                             <td><strong>[D-1 vs 7日均]</strong></td>
                             <td>評估偏離近週平均之程度</td>
-                            <td><strong>484,367</strong></td>
-                            <td>448,702 (7日均值)</td>
-                            <td><strong>+7.9%</strong></td>
-                            <td class="text-center"><span class="badge badge-pass">🟢 正常</span></td>
+                            <td><strong>0</strong></td>
+                            <td>Number (7日均值)</td>
+                            <td><strong>-100.0%</strong></td>
+                            <td class="text-center"><span class="badge badge-fail"></span></td>
                         </tr>
                         <tr>
                             <td><strong>[MTD 比對 (MoM)]</strong></td>
                             <td>追蹤當月累計成長趨勢</td>
-                            <td><strong>1,416,572</strong> (本月)</td>
-                            <td>1,259,683 (上月)</td>
-                            <td><strong>+12.5%</strong></td>
-                            <td class="text-center"><span class="badge badge-pass">🟢 正常</span></td>
+                            <td><strong>Number</strong> (本月)</td>
+                            <td>Number (上月同期)</td>
+                            <td><strong>+/-%</strong></td>
+                            <td class="text-center"><span class="badge badge-pass"></span></td>
                         </tr>
                         <tr>
                             <td><strong>[YTD 比對 (YoY)]</strong></td>
                             <td>評估跨年度累計數據合理性</td>
-                            <td><strong>93,415,757</strong> (今年)</td>
-                            <td>0 (去年同期)</td>
-                            <td><strong>+0.0%</strong></td>
-                            <td class="text-center"><span class="badge badge-warn">🟡 提示</span></td>
+                            <td><strong>Number</strong> (今年)</td>
+                            <td>Number (去年同期)</td>
+                            <td><strong>+/-%</strong></td>
+                            <td class="text-center"><span class="badge badge-warn"></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -427,9 +429,9 @@
             <div class="alert">
                 <strong>💡 多維度比對機制說明：</strong>
                 <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
-                    <li><strong>D-1 vs D-2</strong>：第一時間識別資料斷崖或數值異常爆量。</li>
-                    <li><strong>D-1 vs 7日均值</strong>：過濾週期性（如週末）波動，降低誤報機率。</li>
-                    <li><strong>MTD / YTD 比對</strong>：從宏觀營運角度檢視月度與年度累計數據之連續性。</li>
+                    <li><strong>D-1 vs D-2</strong>：第一時間識別資料數值維持正常更新。</li>
+                    <li><strong>D-1 vs 7日均值</strong>：識別資料數值是否異常爆量/減少,過濾週期性（如週末）波動，降低誤報機率。</li>
+                    <li><strong>MTD / YTD 比對</strong>：從長期角度檢視月度與年度累計數據之連續性。</li>
                 </ul>
             </div>
         </section>
@@ -438,7 +440,7 @@
 
     <!-- 指定頁尾 -->
     <footer>
-        <p>© 2026 Market Trends Monitor. Hosted on <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a>.</p>
+        <p>© 2026 Market Trends Monitor. Hosted on GitHub Pages</a>.</p>
     </footer>
 
 </body>
