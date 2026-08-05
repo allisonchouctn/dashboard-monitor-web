@@ -252,7 +252,7 @@
             
             <ul class="feature-list">
                 <li><strong>自動化排程</strong>：透過 GitHub Actions 於每日指定時間自動喚醒執行，完成數據品質檢驗與 HTML 報告派送。</li>
-                <li><strong>設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成監控設定。</li>
+                <li><strong>設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成檢測設定。</li>
                 <li><strong>基準日期自動檢驗</strong>：以系統當前日期為基準，自動執行資料完整性檢核（含欄位存在性、D-1 更新狀態、7日日期連續性、每日筆數波動及指標異常檢測）。</li>
                 <li><strong>視覺化數據檢測通報</strong>：系統依據檢測結果（PASS/FAIL）自動發送至郵件，標示異常項目與原因。</li>
             </ul>
@@ -332,13 +332,18 @@
 📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS / 🔴 FAIL
 --------------------------------
 📅 D-1 日期: YYYY-MM-DD
+                
 📅 D-2 日期: YYYY-MM-DD
+                
 📦 資料筆數變動:
+                
    • D-1 (YYYY-MM-DD): 0 筆
    • D-2 (YYYY-MM-DD): Number 筆 (-100.0%)
 
 📊 各維度數據比對明細：
+                
 📌 Data_Name:
+                
    • [D-1 vs D-2]    D-1單日: Number | D-2單日: Number (+/-%)
    • [D-1 vs 7日均]  D-1單日: Number | 7日均值: Number (+/-%)
    • [MTD 比對(MoM)] 本月累計: Number | 上月同期: Number (+/-%)
