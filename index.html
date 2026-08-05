@@ -178,8 +178,9 @@
             border-radius: 6px;
             font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
             font-size: 0.875rem;
-            line-height: 1.7;
-            overflow-x: auto;
+            line-height: 1.6;
+            white-space: pre-wrap; /* 確保換行與縮排完整呈現 */
+            word-break: break-all;
             margin: 1rem 0;
             border-left: 4px solid var(--shopee-orange);
         }
@@ -328,27 +329,25 @@
             </div>
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📝 Step 3. 系統檢測產出格式</h3>
-            <div class="code-block">
-📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS / 🔴 FAIL
+            <div class="code-block">📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS / 🔴 FAIL
 --------------------------------
 📅 D-1 日期: YYYY-MM-DD
-                
+
 📅 D-2 日期: YYYY-MM-DD
-                
+
 📦 資料筆數變動:
-                
+
    • D-1 (YYYY-MM-DD): 0 筆
    • D-2 (YYYY-MM-DD): Number 筆 (-100.0%)
 
 📊 各維度數據比對明細：
-                
+
 📌 Data_Name:
-                
+
    • [D-1 vs D-2]    D-1單日: Number | D-2單日: Number (+/-%)
    • [D-1 vs 7日均]  D-1單日: Number | 7日均值: Number (+/-%)
    • [MTD 比對(MoM)] 本月累計: Number | 上月同期: Number (+/-%)
-   • [YTD 比對(YoY)] 今年累計: Number | 去年同期: Number (+/-%)
-            </div>
+   • [YTD 比對(YoY)] 今年累計: Number | 去年同期: Number (+/-%)</div>
         </section>
 
         <!-- 第三章節 -->
