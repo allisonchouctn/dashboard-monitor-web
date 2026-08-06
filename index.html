@@ -340,9 +340,12 @@
                 </table>
             </div>
 
-            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🔑 Step 2. 將新增 Google Sheet 檢查項目共享給 Service Account</h3>
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🔑 Step 2. 新增團隊成員的 Email 至報表收件清單</h3>
             <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-                請開啟欲檢查的 Google Sheet 檔案，點擊右上角「共用」按鈕，將系統之 Service Account 電子郵件地址新增為共用成員，並授予「檢視者」權限，確保自動化程式可正常讀取該報表數據。
+                若您希望每日接收自動化數據檢測報告，請依照以下步驟將您的 Email 加入發信名單：
+                1. 開啟 Apps Script 編輯器：進入專案並找到主程式碼最下方的 sendHtmlReport 區塊（約第 278 行）。
+                2. 修改收件人變數 (targetRecipient)：在半形雙引號內，使用半形逗號（,）將 Email 接續加在後方。
+                儲存設定：修改完成後按下上方選單的 「儲存 (💾)」 圖示。完成後，系統於每日排程執行時即會同步將報告發送至您的信箱。
             </p>
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🛡️ Step 3. 自動化巡檢架構圖</h3>
