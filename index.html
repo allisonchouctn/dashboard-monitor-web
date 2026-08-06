@@ -1,939 +1,520 @@
 <!DOCTYPE html>
-
 <html lang="zh-TW">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Market Trends Monitor | 自動化資料數據檢查系統</title>
-
     <!-- 引入 CDN FontAwesome 圖示與 Mermaid 圖表套件 -->
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-
     <script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
 
-
-
     <style>
-
         /* 全局變數定義 - 蝦皮主題配色 (Shopee Brand Colors) */
-
         :root {
-
             --shopee-orange: #ee4d2d;         /* 蝦皮主色橘 */
-
             --shopee-orange-hover: #d73211;   /* 蝦皮懸停深橘 */
-
             --shopee-orange-light: #fff5f1;   /* 蝦皮淺橘背景 */
-
             --bg-body: #f5f5f5;               /* 蝦皮灰色底色 */
-
             --bg-card: #ffffff;
-
             --text-main: #222222;
-
             --text-muted: #757575;
-
             --border-color: #e8e8e8;
-
             --success-color: #26aa99;         /* 蝦皮綠色 */
-
             --danger-color: #ee4d2d;          /* 蝦皮紅色 (FAIL) */
-
             --warning-color: #ffbf00;         /* 蝦皮警示黃 */
-
             --code-bg: #1e1e1e;
-
             --code-text: #d4d4d4;
-
             --shadow-sm: 0 1px 1px rgba(0,0,0,0.05);
-
             --shadow-md: 0 2px 4px rgba(0,0,0,0.08);
-
+            --table-header-bg: #1a365d;       /* 深藍色表頭背景 */
         }
-
-
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-
             line-height: 1.6;
-
             color: var(--text-main);
-
             background-color: var(--bg-body);
-
             display: flex;
-
             flex-direction: column;
-
             min-height: 100vh;
-
         }
-
-
 
         /* 頂部 Header - 蝦皮主色漸層區塊 */
-
         header {
-
             background: linear-gradient(-180deg, #f53d2d, #f63);
-
             color: #ffffff;
-
             padding: 2.5rem 1.5rem 2rem;
-
             text-align: center;
-
             box-shadow: var(--shadow-md);
-
         }
-
         header h1 {
-
             font-size: 2.1rem;
-
             font-weight: 700;
-
             margin-bottom: 0.5rem;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             gap: 0.6rem;
-
         }
-
         header p {
-
             color: rgba(255, 255, 255, 0.9);
-
             font-size: 1rem;
-
             max-width: 650px;
-
             margin: 0 auto 1.5rem;
-
         }
-
-
 
         /* 快速導覽按鈕區 */
-
         .quick-nav {
-
             display: flex;
-
             justify-content: center;
-
             gap: 0.75rem;
-
             flex-wrap: wrap;
-
             margin-top: 1rem;
-
         }
-
         .btn-nav {
-
             background-color: #ffffff;
-
             color: var(--shopee-orange);
-
             text-decoration: none;
-
             padding: 0.5rem 1.25rem;
-
             border-radius: 4px;
-
             font-size: 0.9rem;
-
             font-weight: 600;
-
             box-shadow: var(--shadow-sm);
-
             transition: all 0.2s ease;
-
         }
-
         .btn-nav:hover {
-
             background-color: var(--shopee-orange-light);
-
             transform: translateY(-1px);
-
         }
-
-
 
         /* 主內容容器 */
-
         main {
-
             flex: 1;
-
             max-width: 1000px;
-
             width: 100%;
-
             margin: 2rem auto;
-
             padding: 0 1.5rem;
-
         }
-
-
 
         /* 卡片元件 */
-
         .card {
-
             background: var(--bg-card);
-
             border-radius: 4px;
-
             padding: 2rem;
-
             margin-bottom: 1.5rem;
-
             border: 1px solid var(--border-color);
-
             box-shadow: var(--shadow-sm);
-
         }
-
         .card-title {
-
             font-size: 1.3rem;
-
             font-weight: 700;
-
             color: var(--shopee-orange);
-
             margin-bottom: 1.25rem;
-
             padding-bottom: 0.5rem;
-
             border-bottom: 2px solid var(--shopee-orange);
-
             display: flex;
-
             align-items: center;
-
             gap: 0.5rem;
-
         }
-
-
 
         /* 列表樣式 */
-
         .feature-list {
-
             list-style: none;
-
         }
-
         .feature-list li {
-
             position: relative;
-
             padding-left: 1.75rem;
-
             margin-bottom: 0.75rem;
-
         }
-
         .feature-list li::before {
-
             content: "✔";
-
             position: absolute;
-
             left: 0;
-
             color: var(--shopee-orange);
-
             font-weight: bold;
-
         }
-
-
 
         /* 表格樣式 */
-
         .table-responsive {
-
             overflow-x: auto;
-
             margin: 1rem 0;
-
         }
-
         table {
-
             width: 100%;
-
             border-collapse: collapse;
-
             font-size: 0.95rem;
-
             background: #ffffff;
-
         }
-
         th, td {
-
             padding: 0.75rem 1rem;
-
             border: 1px solid var(--border-color);
-
             text-align: left;
-
         }
-
         th {
-
             background-color: #fafafa;
-
             color: #555555;
-
             font-weight: 600;
-
+        }
+        
+        /* 特殊深藍色報表表頭樣式 */
+        table.styled-summary-table th {
+            background-color: var(--table-header-bg);
+            color: #ffffff;
+            text-align: center;
+            font-weight: 700;
         }
 
         .text-center { text-align: center; }
-
+        .sub-text {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
         
+        /* 狀態卡片統計條 */
+        .summary-bar {
+            background-color: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 6px;
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
 
         /* 狀態標籤 (Badges) */
-
         .badge {
-
             display: inline-block;
-
             padding: 0.25rem 0.6rem;
-
-            border-radius: 2px;
-
+            border-radius: 4px;
             font-size: 0.825rem;
-
             font-weight: 600;
-
         }
-
-        .badge-pass { background-color: #e8f7f5; color: var(--success-color); border: 1px solid #b2e5df; }
-
-        .badge-fail { background-color: #fff0ed; color: var(--danger-color); border: 1px solid #fccac1; }
-
-        .badge-warn { background-color: #fff8e6; color: #d97706; border: 1px solid #ffe599; }
-
-
+        .badge-pass { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .badge-fail { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
         /* 日誌代碼區塊 */
-
         .code-block {
-
             background-color: var(--code-bg);
-
             color: var(--code-text);
-
             padding: 1.25rem 1.5rem;
-
             border-radius: 6px;
-
             font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-
             font-size: 0.875rem;
-
             line-height: 1.6;
-
-            white-space: pre-wrap; /* 確保換行與縮排完整呈現 */
-
+            white-space: pre-wrap;
             word-break: break-all;
-
             margin: 1rem 0;
-
             border-left: 4px solid var(--shopee-orange);
-
         }
-
-
 
         /* 蝦皮風格提示區塊 */
-
         .alert {
-
             padding: 1rem 1.25rem;
-
             background-color: var(--shopee-orange-light);
-
             border-left: 4px solid var(--shopee-orange);
-
             border-radius: 2px;
-
             margin: 1rem 0;
-
             font-size: 0.9rem;
-
             color: #333333;
-
         }
 
-
-
-        /* 流程圖容器 (放大呈現優化) */
-
+        /* 流程圖容器 */
         .diagram-container {
-
             display: flex;
-
             justify-content: center;
-
             align-items: center;
-
             background: #ffffff;
-
             padding: 2.5rem 1.5rem;
-
             border-radius: 6px;
-
             border: 1px dashed var(--border-color);
-
             margin: 1.25rem 0;
-
             overflow-x: auto;
-
         }
-
         .diagram-container .mermaid {
-
             width: 100%;
-
             display: flex;
-
             justify-content: center;
-
         }
-
         .diagram-container svg {
-
             max-width: 100% !important;
-
             height: auto !important;
-
             min-height: 280px;
-
         }
-
-
 
         /* 頁尾 (Footer) */
-
         footer {
-
             background-color: #ffffff;
-
             border-top: 1px solid var(--border-color);
-
             text-align: center;
-
             padding: 1.5rem;
-
             font-size: 0.9rem;
-
             color: var(--text-muted);
-
         }
-
     </style>
-
 </head>
-
 <body>
 
-
-
     <!-- 頂部區塊 (蝦皮主題橘色) -->
-
     <header>
-
         <h1><i class="fa-solid fa-bag-shopping"></i> Dashboard Automation</h1>
-
         <p>自動化資料數據檢查系統文件</p>
-
         <div class="quick-nav">
-
             <a href="#section-1" class="btn-nav">1. 系統總覽</a>
-
             <a href="#section-2" class="btn-nav">2. 新增檢查報表與運作流程</a>
-
             <a href="#section-3" class="btn-nav">3. 數據檢驗報告呈現</a>
-
         </div>
-
     </header>
 
-
-
     <!-- 主內容區 -->
-
     <main>
-
         
-
         <!-- 第一章節 -->
-
         <section id="section-1" class="card">
-
             <h2 class="card-title"><i class="fa-solid fa-compass"></i> 1. 系統總覽</h2>
-
             <p style="margin-bottom: 1rem;">本系統旨在建立自動化數據品質防護機制，有效解決過往資料更新中斷、欄位遺失或數據異常未即時發現之問題。</p>
-
             
-
             <ul class="feature-list">
-
                 <li><strong>自動化排程</strong>：透過 GitHub Actions 於每日指定時間自動喚醒執行，完成數據品質檢驗與 HTML 報告派送。</li>
-
                 <li><strong>設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成檢驗設定。</li>
-
                 <li><strong>基準日期自動檢驗</strong>：以系統當前日期為基準，自動執行資料完整性檢核（含欄位存在性、D-1 更新狀態、7日日期連續性、每日筆數波動及指標異常檢測）。</li>
-
                 <li><strong>視覺化數據檢測通報</strong>：系統依據檢測結果（PASS/FAIL）自動發送至郵件，標示異常項目與原因。</li>
-
             </ul>
-
         </section>
 
-
-
         <!-- 第二章節 -->
-
         <section id="section-2" class="card">
-
             <h2 class="card-title"><i class="fa-solid fa-square-plus"></i> 2. 新增檢查報表與運作流程</h2>
-
             <p>若需新增 Google Sheet 檢驗項目，無須更動任何程式碼，僅需完成以下設定流程：</p>
 
-
-
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📖 Step 1. 編輯 Monitor 設定檔</h3>
-
             <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-
                 請至檢驗主表之 <code>Monitor - MONITOR_CONFIG</code> 工作表中新增列位（如需減少監控表單，直接於設定檔中刪除對應列位即可）：
-
             </p>
-
             
-
             <div class="table-responsive">
-
                 <table>
-
                     <thead>
-
                         <tr>
-
                             <th>欄位名稱</th>
-
                             <th>說明</th>
-
                             <th>範例</th>
-
                         </tr>
-
                     </thead>
-
                     <tbody>
-
                         <tr>
-
                             <td><code>spreadsheet_name</code></td>
-
                             <td>目標 Google Sheet 之檔案名稱</td>
-
                             <td><code>Spreadsheet_Name</code></td>
-
                         </tr>
-
                         <tr>
-
                             <td><code>worksheet_name</code></td>
-
                             <td>欲檢驗之特定工作表（分頁）名稱</td>
-
                             <td><code>Worksheet_Name</code></td>
-
                         </tr>
-
                         <tr>
-
                             <td><code>date_column</code></td>
-
                             <td>資料表中作為日期基準之欄位名稱</td>
-
                             <td><code>Date_Column</code></td>
-
                         </tr>
-
                         <tr>
-
                             <td><code>metrics</code></td>
-
                             <td>欲執行數據比對之數值欄位（多個請以逗號隔開）</td>
-
                             <td><code>Data_A, Data_B, Data_C</code></td>
-
                         </tr>
-
                     </tbody>
-
                 </table>
-
             </div>
 
-
-
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🔑 Step 2. 將新增 Google Sheet 檢查項目共享給 Service Account</h3>
-
             <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-
                 請開啟欲檢查的 Google Sheet 檔案，點擊右上角「共用」按鈕，將系統之 Service Account 電子郵件地址新增為共用成員，並授予「檢視者」權限，確保自動化程式可正常讀取該報表數據。
-
             </p>
 
-
-
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🛡️ Step 3. 自動化巡檢架構圖</h3>
-
             <div class="diagram-container">
-
                 <pre class="mermaid">
-
                 flowchart LR
-
                     subgraph Step1 ["#1 設定作業"]
-
                         direction TB
-
                         S1_A["📖 編輯 Monitor Config 設定表"]
-
                         S1_B["填寫關鍵資訊:\n• 檔案與工作表名稱\n• 日期欄位名稱\n• 指定檢驗欄位 (Metrics)"]
-
                         S1_A --> S1_B
-
                     end
-
-
 
                     subgraph Step2 ["#2 自動化品質檢測"]
-
                         direction TB
-
                         S2_A["🛡️ QualityChecker 自動檢驗"]
-
                         S2_B["1. 欄位完整性檢查\n2. D-1 更新狀態檢測\n3. 7天日期完整性\n4. 每日資料筆數比對\n5. 四大維度 KPI 對比"]
-
                         S2_A --> S2_B
-
                     end
-
-
 
                     Step1 ==> Step2
 
-
-
                     style Step1 fill:#f9f9f9,stroke:#ee4d2d,stroke-width:2px;
-
                     style Step2 fill:#f9f9f9,stroke:#ee4d2d,stroke-width:2px;
-
                 </pre>
-
             </div>
-
-
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📝 Step 4. 系統檢測產出格式</h3>
-
             <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">正常情境 (🟢 PASS)：</p>
-
             <div class="code-block">📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🟢 PASS
-
 --------------------------------
-
 📅 D-1 日期: YYYY-MM-DD
-
 📅 D-2 日期: YYYY-MM-DD
-
 📦 資料筆數變動:
-
    • D-1 (YYYY-MM-DD): Number 筆
-
    • D-2 (YYYY-MM-DD): Number 筆 (+/-%)
-
 📊 各維度數據比對明細：
-
 📌 Data_Name:
-
    • [D-1 vs D-2]    D-1單日: Number | D-2單日: Number (+/-%)
-
    • [D-1 vs 7日均]  D-1單日: Number | 7日均值: Number (+/-%)
-
    • [MTD 比對(MoM)] 本月累計: Number | 上月同期: Number (+/-%)
-
    • [YTD 比對(YoY)] 今年累計: Number | 去年同期: Number (+/-%)</div>
 
-
-
             <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem; margin-bottom: 0.5rem;">異常情境 (🔴 FAIL)：</p>
-
             <div class="code-block">📄 報表：[Spreadsheet_Name] - 工作表: [Worksheet_Name] -> 🔴 FAIL
-
 --------------------------------
-
 🚨 異常原因：
-
    • [更新異常] 資料未更新！今日為 Current_Date，期待 D-1 日期為 [YYYY-MM-DD]，但資料最新僅到 [YYYY-MM-DD]
-
    • [日期缺失] 近 7 天內缺少日期: YYYY-MM-DD
-
    • [筆數異常] D-1 (YYYY-MM-DD) 完全無資料 (0 筆)
+   • [KPI異常] Data_A 單日數據較 7 日均值暴跌 % ; Data_B 單日數據較 7 日均值暴跌 % ; Data_C 單日數據較 7 日均值暴跌 %</div>
 
-   • [KPI異常] Data_A 單日數據較 7 日均值暴跌 % ; Data_B 單日數據較 7 日均值暴跌 % ; Data_C 單日數據較 7 日均值暴跌 %
-
-        </section>
-
-
-
-        <!-- 第三章節 -->
-
-        <section id="section-3" class="card">
-
-            <h2 class="card-title"><i class="fa-solid fa-chart-line"></i> 3. 數據檢驗報告呈現</h2>
-
-            <p>檢測結果將自動整理並渲染為結構化之電子郵件報告：</p>
-
-
-
-            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📄 報表基礎檢驗摘要</h3>
-
+            <h3 style="margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📊 多維度數據比對明細</h3>
             <div class="table-responsive">
-
                 <table>
-
                     <thead>
-
                         <tr>
-
-                            <th>檢驗項目</th>
-
-                            <th>檢測現況 / 明細</th>
-
-                            <th class="text-center">狀態</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-
-                            <td><strong>目標報表名稱</strong></td>
-
-                            <td><code>Spreadsheet_Name</code></td>
-
-                            <td class="text-center">-</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td><strong>監控工作表</strong></td>
-
-                            <td><code>Worksheet_Name</code></td>
-
-                            <td class="text-center">-</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td><strong>整體健康狀態</strong></td>
-
-                            <td>D-1 資料完成更新，數據檢驗正常 / 數據缺失或筆數異常，觸發警報</td>
-
-                            <td class="text-center"><span class="badge badge-fail">🟢 PASS / 🔴 FAIL</span></td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td><strong>最新更新日期</strong></td>
-
-                            <td><strong>D-1</strong> (<code>YYYY-MM-DD</code>) | <strong>D-2</strong> (<code>YYYY-MM-DD</code>)</td>
-
-                            <td class="text-center">-</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td><strong>資料筆數變動</strong></td>
-
-                            <td><strong>D-1</strong>: <code>Number</code> 筆 | <strong>D-2</strong>: <code>Number</code> 筆 (<strong>+/-%</strong>)</td>
-
-                            <td class="text-center">-</td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-
-            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📊 多維度數據比對明細</h3>
-
-            <div class="table-responsive">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
                             <th>比對維度</th>
-
                             <th>檢驗目的</th>
-
                             <th>D-1 / 當期數值</th>
-
                             <th>對照期數值</th>
-
                             <th>變動幅度 (%)</th>
-
                         </tr>
-
                     </thead>
-
                     <tbody>
-
                         <tr>
-
                             <td><strong>[D-1 vs D-2]</strong></td>
-
                             <td>檢測單日突發性數據異常</td>
-
                             <td><strong>Number</strong></td>
-
                             <td>Number (D-2)</td>
-
                             <td><strong>+/-%</strong></td>
-
                         </tr>
-
                         <tr>
-
                             <td><strong>[D-1 vs 7日均]</strong></td>
-
                             <td>評估偏離近週平均之程度</td>
-
                             <td><strong>Number</strong></td>
-
                             <td>Number (7日均值)</td>
-
                             <td><strong>+/-%</strong></td>
-
                         </tr>
-
                         <tr>
-
                             <td><strong>[MTD 比對 (MoM)]</strong></td>
-
                             <td>追蹤當月累計成長趨勢</td>
-
                             <td><strong>Number</strong> (本月)</td>
-
                             <td>Number (上月同期)</td>
-
                             <td><strong>+/-%</strong></td>
-
                         </tr>
-
                         <tr>
-
                             <td><strong>[YTD 比對 (YoY)]</strong></td>
-
                             <td>評估跨年度累計數據合理性</td>
-
                             <td><strong>Number</strong> (今年)</td>
-
                             <td>Number (去年同期)</td>
-
                             <td><strong>+/-%</strong></td>
-
                         </tr>
-
                     </tbody>
-
                 </table>
-
             </div>
-
-
 
             <div class="alert">
-
                 <strong>💡 多維度比對機制說明：</strong>
-
                 <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
-
                     <li><strong>D-1 vs D-2</strong>：第一時間識別資料數值是否維持正常更新。</li>
-
                     <li><strong>D-1 vs 7日均值</strong>：識別資料數值是否異常爆量/減少，並過濾週期性（如週末）波動，降低誤報機率。</li>
-
                     <li><strong>MTD / YTD 比對</strong>：從長期角度檢視月度與年度累計數據之連續性。</li>
-
                 </ul>
-
             </div>
-
         </section>
 
+        <!-- 第三章節 -->
+        <section id="section-3" class="card">
+            <h2 class="card-title"><i class="fa-solid fa-chart-line"></i> 3. 數據檢驗報告呈現</h2>
+            <p>檢測結果將自動整理並渲染為結構化之電子郵件報告：</p>
 
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">📄 報表基礎檢驗摘要</h3>
+            
+            <!-- 統計數據摘要條 -->
+            <div class="summary-bar">
+                <div class="summary-item">
+                    📋 檢測報表總數 : <strong>2</strong>
+                </div>
+                <div class="summary-item">
+                    🟢 正常 (PASS) : <strong style="color: var(--success-color);">1</strong>
+                </div>
+                <div class="summary-item">
+                    🔴 異常 (FAIL) : <strong style="color: var(--danger-color);">1</strong>
+                </div>
+            </div>
+
+            <!-- 檢驗結果表格 (保留 1 PASS + 1 FAIL) -->
+            <div class="table-responsive">
+                <table class="styled-summary-table">
+                    <thead>
+                        <tr>
+                            <th>報表/工作表</th>
+                            <th>狀態</th>
+                            <th>資料更新方式</th>
+                            <th>檢查結果/異常記錄</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Spreadsheet_Name_A</strong>
+                                <span class="sub-text">Worksheet_Name_A</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-pass">🟢 PASS</span>
+                            </td>
+                            <td class="text-center">排程</td>
+                            <td>最後更新日期: YYYY-MM-DD</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Spreadsheet_Name_B</strong>
+                                <span class="sub-text">Worksheet_Name_B</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-fail">🔴 FAIL</span>
+                            </td>
+                            <td class="text-center">排程</td>
+                            <td>[更新異常] 資料未更新！<br>最後更新日期: YYYY-MM-DD</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
     </main>
 
-
-
     <!-- 指定頁尾 -->
-
     <footer>
-
         <p>© 2026 Market Trends Monitor. Hosted on GitHub Pages.</p>
-
     </footer>
 
-
-
 </body>
-
 </html>
