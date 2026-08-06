@@ -300,7 +300,7 @@
             <p style="margin-bottom: 1rem;">本系統旨在建立自動化數據品質防護機制，有效解決過往資料更新中斷、欄位遺失或數據異常未即時發現之問題。</p>
             
             <ul class="feature-list">
-                <li><strong>自動化排程</strong>：透過 GitHub Actions 於每日指定時間自動喚醒執行，完成數據品質檢驗與 HTML 報告派送。</li>
+                <li><strong>自動化排程</strong>：透過 GitHub Actions/App Script 於每日指定時間自動喚醒執行，完成數據檢驗與 HTML 報告派送。</li>
                 <li><strong>設定檔架構</strong>：僅需於 <code>MONITOR_CONFIG</code> 工作表中填寫目標報表名稱、<code>date_column</code> 及指定檢驗欄位，即可完成檢驗設定。</li>
                 <li><strong>基準日期自動檢驗</strong>：以系統當前日期為基準，自動執行資料完整性檢核（含欄位存在性、D-1 更新狀態、7日日期連續性、每日筆數波動及指標異常檢測）。</li>
                 <li><strong>視覺化數據檢測通報</strong>：系統依據檢測結果（PASS/FAIL）自動發送至郵件，標示異常項目與原因。</li>
