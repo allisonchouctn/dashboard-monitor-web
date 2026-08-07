@@ -266,15 +266,74 @@
             color: var(--text-muted);
         }
 
-        /* 用於 Step 2 需要加深文字顏色並換行的樣式 */
-        .step-dark-text {
-            font-size: 0.95rem;
-            color: #000000; /* 文字顏色加深為黑色 */
-            margin-bottom: 0.5rem;
+        /* CSS 純切換頁籤 (Tab Switcher) */
+        .tab-container {
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #ffffff;
         }
-        .step-instruction {
-            margin-top: 0.5rem;
-            display: block; /* 確保換行 */
+        .tab-radio {
+            display: none;
+        }
+        .tab-headers {
+            display: flex;
+            background-color: #f1f5f9;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .tab-label {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .tab-label:hover {
+            color: var(--shopee-orange);
+            background-color: #f8fafc;
+        }
+        
+        /* 選擇預設激活標籤 */
+        #tab-appscript:checked ~ .tab-headers label[for="tab-appscript"],
+        #tab-github:checked ~ .tab-headers label[for="tab-github"] {
+            color: var(--shopee-orange);
+            background-color: #ffffff;
+            border-bottom: 3px solid var(--shopee-orange);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1.25rem 1.5rem;
+            font-size: 0.95rem;
+            color: #222222;
+        }
+
+        #tab-appscript:checked ~ .tab-contents #content-appscript,
+        #tab-github:checked ~ .tab-contents #content-github {
+            display: block;
+        }
+
+        /* 內部步驟樣式 */
+        .step-instruction-item {
+            margin-bottom: 0.75rem;
+            padding-left: 0.25rem;
+        }
+        .sub-instruction {
+            margin-top: 0.35rem;
+            padding-left: 1.25rem;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+        .sub-instruction li {
+            margin-bottom: 0.25rem;
         }
     </style>
 </head>
@@ -351,22 +410,69 @@
                 </table>
             </div>
 
-            <!-- Step 2 區域 -->
-            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🔑 Step 2. 新增團隊成員的 Email 至報表收件清單</h3>
-            <div class="step-dark-text">
-                若您希望每日接收自動化數據檢測報告，請依照以下步驟將您的 Email 加入發信名單：
-                
-                <span class="step-instruction">
-                    1. 開啟 Apps Script 編輯器：進入專案並找到主程式碼最下方的 sendHtmlReport 區塊（約第 278 行）。
-                </span>
-                
-                <span class="step-instruction">
-                    2. 修改收件人變數 (targetRecipient)：在半形雙引號內，使用半形逗號（,）將 Email 接續加在後方。
-                </span>
-                
-                <span class="step-instruction">
-                    3. 儲存設定：修改完成後按下上方選單的 「儲存 (💾)」 圖示。完成後，系統於每日排程執行時即會同步將報告發送至您的信箱。
-                </span>
+            <!-- Step 2 區域：使用 Tab 頁籤切換 Apps Script 與 GitHub Actions -->
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🔑 Step 2. 權限設定與收件清單（請依部署方式選擇）</h3>
+            
+            <div class="tab-container">
+                <!-- Radio Inputs 控管狀態 -->
+                <input type="radio" id="tab-appscript" name="environment-tab" class="tab-radio" checked>
+                <input type="radio" id="tab-github" name="environment-tab" class="tab-radio">
+
+                <!-- 頁籤 Header -->
+                <div class="tab-headers">
+                    <label for="tab-appscript" class="tab-label">
+                        <i class="fa-brands fa-google"></i> Google Apps Script 部署
+                    </label>
+                    <label for="tab-github" class="tab-label">
+                        <i class="fa-brands fa-github"></i> GitHub Actions 部署
+                    </label>
+                </div>
+
+                <!-- 頁籤內容區 -->
+                <div class="tab-contents">
+                    <!-- Apps Script 內容 -->
+                    <div id="content-appscript" class="tab-content">
+                        <p style="margin-bottom: 0.75rem; font-weight: 600;">若專案部署於 Google Apps Script，請依以下步驟將成員 Email 加入發信名單：</p>
+                        <div class="step-instruction-item">
+                            <strong>1. 開啟 Apps Script 編輯器：</strong>進入專案並找到主程式碼最下方的 <code>sendHtmlReport</code> 區塊（約第 278 行）。
+                        </div>
+                        <div class="step-instruction-item">
+                            <strong>2. 修改收件人變數 (targetRecipient)：</strong>在半形雙引號內，使用半形逗號（<code>,</code>）將 Email 接續加在後方。
+                        </div>
+                        <div class="step-instruction-item">
+                            <strong>3. 儲存設定：</strong>修改完成後按下上方選單的「儲存 (💾)」圖示。每日排程執行時即會同步發送報告至該信箱。
+                        </div>
+                    </div>
+
+                    <!-- GitHub Actions 內容 -->
+                    <div id="content-github" class="tab-content">
+                        <p style="margin-bottom: 0.75rem; font-weight: 600;">若專案部署於 GitHub Actions，需同時設定「GCP 服務帳號權限」與「GitHub Secrets 收件清單」：</p>
+                        
+                        <div class="step-instruction-item" style="margin-bottom: 1rem;">
+                            <strong>一、 取得 GCP 服務帳號（Service Account） Email 並授權：</strong>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.25rem;">請透過以下任一方式取得 Service Account Email，並將欲檢驗的 Google Sheet 共用給該 Email（給予「檢視者」權限）：</p>
+                            <ul class="sub-instruction">
+                                <li><strong>方法 1（GCP 主控台）：</strong>登入 Google Cloud Console ➔ 點擊選單 (☰) ➔ 「IAM 與管理員」 ➔ 「服務帳號」，複製清單中的完整 Email 地址。</li>
+                                <li><strong>方法 2（憑證 JSON 檔）：</strong>開啟專案中的憑證金鑰檔 <code>credentials.json</code>，尋找並複製 <code>client_email</code> 欄位的值。</li>
+                            </ul>
+                        </div>
+
+                        <div class="step-instruction-item">
+                            <strong>二、 新增團隊成員 Email 至 GitHub Secrets 收件清單：</strong>
+                            <ul class="sub-instruction" style="list-style-type: decimal;">
+                                <li>開啟 GitHub 專案，點選 <strong>Settings</strong> ➔ 左側 <strong>Secrets and variables</strong> ➔ <strong>Actions</strong>。</li>
+                                <li>尋找 <code>RECEIVER_EMAIL</code>，若無此項目請點擊 <strong>New repository secret</strong>。</li>
+                                <li>填入資訊：
+                                    <ul style="margin-top: 0.25rem; list-style-type: disc; padding-left: 1rem;">
+                                        <li><strong>Name:</strong> <code>RECEIVER_EMAIL</code></li>
+                                        <li><strong>Secret:</strong> 填入所有收件人的 Email，中間請務必使用半形逗號（<code>,</code>）隔開。</li>
+                                    </ul>
+                                </li>
+                                <li>點擊 <strong>Add secret</strong> 儲存設定。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem;">🛡️ Step 3. 自動化巡檢架構圖</h3>
@@ -537,7 +643,7 @@
 
     <!-- 指定頁尾 -->
     <footer>
-        <p>© 2026 Market Trends Monitor. Hosted on GitHub Pages.</p>
+        <p>© 2026 Dashboard Automation. Hosted on GitHub Pages.</p>
     </footer>
 
 </body>
