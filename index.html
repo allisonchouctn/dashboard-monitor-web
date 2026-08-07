@@ -313,7 +313,7 @@
             display: none;
             padding: 1.25rem 1.5rem;
             font-size: 0.95rem;
-            color: #222222;
+            color: #111111; /* 全局深色字體 */
         }
 
         #tab-appscript:checked ~ .tab-contents #content-appscript,
@@ -325,15 +325,27 @@
         .step-instruction-item {
             margin-bottom: 0.75rem;
             padding-left: 0.25rem;
+            color: #111111; /* 標題文字深色 */
         }
         .sub-instruction {
             margin-top: 0.35rem;
             padding-left: 1.25rem;
-            font-size: 0.9rem;
-            color: #475569;
+            font-size: 0.92rem;
+            color: #222222; /* 次要說明加深文字 */
         }
         .sub-instruction li {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.35rem;
+        }
+
+        /* 超連結樣式 */
+        .external-link {
+            color: var(--shopee-orange);
+            font-weight: 600;
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+        .external-link:hover {
+            color: var(--shopee-orange-hover);
         }
     </style>
 </head>
@@ -432,7 +444,7 @@
                 <div class="tab-contents">
                     <!-- Apps Script 內容 -->
                     <div id="content-appscript" class="tab-content">
-                        <p style="margin-bottom: 0.75rem; font-weight: 600;">若專案部署於 Google Apps Script，請依以下步驟將成員 Email 加入發信名單：</p>
+                        <p style="margin-bottom: 0.75rem; font-weight: 600; color: #000000;">若專案部署於 Google Apps Script，請依以下步驟將成員 Email 加入發信名單：</p>
                         <div class="step-instruction-item">
                             <strong>1. 開啟 Apps Script 編輯器：</strong>進入專案並找到主程式碼最下方的 <code>sendHtmlReport</code> 區塊（約第 278 行）。
                         </div>
@@ -444,15 +456,15 @@
                         </div>
                     </div>
 
-                    <!-- GitHub Actions 內容 -->
+                    <!-- GitHub Actions 內容 (字體加深、加連結) -->
                     <div id="content-github" class="tab-content">
-                        <p style="margin-bottom: 0.75rem; font-weight: 600;">若專案部署於 GitHub Actions，需同時設定「GCP 服務帳號權限」與「GitHub Secrets 收件清單」：</p>
+                        <p style="margin-bottom: 0.75rem; font-weight: 600; color: #000000;">若專案部署於 GitHub Actions，需同時設定「GCP 服務帳號權限」與「GitHub Secrets 收件清單」：</p>
                         
                         <div class="step-instruction-item" style="margin-bottom: 1rem;">
                             <strong>一、 取得 GCP 服務帳號（Service Account） Email 並授權：</strong>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.25rem;">請透過以下任一方式取得 Service Account Email，並將欲檢驗的 Google Sheet 共用給該 Email（給予「檢視者」權限）：</p>
+                            <p style="font-size: 0.9rem; color: #333333; margin-top: 0.25rem;">請透過以下任一方式取得 Service Account Email，並將欲檢驗的 Google Sheet 共用給該 Email（給予「檢視者」權限）：</p>
                             <ul class="sub-instruction">
-                                <li><strong>方法 1（GCP 主控台）：</strong>登入 Google Cloud Console ➔ 點擊選單 (☰) ➔ 「IAM 與管理員」 ➔ 「服務帳號」，複製清單中的完整 Email 地址。</li>
+                                <li><strong>方法 1（GCP 主控台）：</strong>登入 <a href="https://console.cloud.google.com/" target="_blank" class="external-link">Google Cloud Console</a> ➔ 點擊選單 (☰) ➔ 「IAM 與管理員」 ➔ 「服務帳號」，複製清單中的完整 Email 地址。</li>
                                 <li><strong>方法 2（憑證 JSON 檔）：</strong>開啟專案中的憑證金鑰檔 <code>credentials.json</code>，尋找並複製 <code>client_email</code> 欄位的值。</li>
                             </ul>
                         </div>
